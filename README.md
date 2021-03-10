@@ -4,9 +4,8 @@ This is meant to be a starter template for setting up docker containers for runn
 
 The containers used are from [Wodby](https://wodby.com/) and the following referencess are helpful when configuring the playbook.
 
-* [docker-compose.yml](https://github.com/wodby/docker4drupal/blob/master/docker-compose.yml) for container configuration.
-* [Available environment variables for configuration](https://github.com/wodby/docker4drupal/blob/master/.env)
-* [Wodby Drupal stack docs](https://wodby.com/docs/1.0/stacks/drupal/)
+* [Nginx Docker Container Images](https://github.com/wodby/nginx) for container configuration.
+* [Wodby HTML stack docs](https://wodby.com/docs/1.0/stacks/html/)
 
 ## Notes
 
@@ -21,13 +20,6 @@ Copy/fork this repo, update the "PROJECT_NAME" variable in the "vars" file and r
     ansible-playbook -i inventory.bolivar --connection=local playbook.yml
 
 Obviously using a different inventory file and potentially not specifying the "--connection" option if you're not creating the containers on your local machine that is named "bolivar".
-
-To install a fresh copy of Drupal:
-
-    docker exec -it PROJECT_NAME-php /bin/bash
-    composer create-project drupal/recommended-project .
-
-Then visit the site and complete the site setup.
 
 This setup assumes you've already set up the [traefik container](https://github.com/karlkedrovsky/traefik-ansible) on the machine to handle inbound traffic.
 

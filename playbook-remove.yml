@@ -1,0 +1,24 @@
+---
+- hosts: all
+  vars_files:
+    - ./vars.yml
+  tasks:
+    - name: get info regarding the web conainer
+      docker_container_info:
+        name: '{{ PROJECT_NAME }}-web'
+      register: resultsweb
+    - name: stop web conainer
+      docker_container:
+        name: '{{ PROJECT_NAME }}-web'
+        state: 'stopped'
+      when:
+        - resultsweb.exists
+        - resultsweb.container['State']['Status'] == 'running'
+    - name: remove web conainer
+      docker_container:
+        name: '{{ PROJECT_NAME }}-web'
+        state: 'absent'
+    - name: remove {{ PROJECT_NAME }} network
+      docker_network:
+        name: '{{ PROJECT_NAME }}'
+        state: 'absent'

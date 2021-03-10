@@ -1,0 +1,4 @@
+PROJECT_NAME: web-ansible
+PROJECT_BASE_URL: web-ansible.bolivar.kedrovsky.com
+
+NGINX_TAG: 1.19

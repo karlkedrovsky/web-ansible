@@ -1,0 +1,34 @@
+---
+- hosts: all
+  vars_files:
+    - ./vars.yml
+  tasks:
+    - name: create {{ PROJECT_NAME }} network
+      docker_network:
+        name: '{{ PROJECT_NAME }}'
+    - name: deploy web conainer
+      docker_container:
+        name: '{{ PROJECT_NAME }}-web'
+        image: 'wodby/nginx:{{ NGINX_TAG }}'
+        volumes:
+          - './site:/var/www/html'
+        networks:
+          - name: web
+          - name: '{{ PROJECT_NAME }}'
+        purge_networks: yes
+        restart_policy: unless-stopped
+        labels:
+          '{
+             "traefik.enable": "true",
+             "traefik.http.middlewares.{{ PROJECT_NAME }}-https.redirectscheme.scheme": "https",
+             "traefik.http.middlewares.{{ PROJECT_NAME }}-https.redirectscheme.permanent": "true",
+             "traefik.http.middlewares.{{ PROJECT_NAME }}-auth.basicauth.users": "web:$apr1$6Zpn5i48$2c1a/YEZYW1TJS.iuTpmP/",
+             "traefik.http.routers.{{ PROJECT_NAME }}-http.entrypoints": "web",
+             "traefik.http.routers.{{ PROJECT_NAME }}-http.rule": "Host(`{{ PROJECT_NAME }}.bolivar.kedrovsky.com`)",
+             "traefik.http.routers.{{ PROJECT_NAME }}-http.middlewares": "{{ PROJECT_NAME }}-https@docker",
+             "traefik.http.routers.{{ PROJECT_NAME }}.middlewares": "{{ PROJECT_NAME }}-auth",
+             "traefik.http.routers.{{ PROJECT_NAME }}.entrypoints": "websecure",
+             "traefik.http.routers.{{ PROJECT_NAME }}.rule": "Host(`{{ PROJECT_NAME }}.bolivar.kedrovsky.com`)",
+             "traefik.http.routers.{{ PROJECT_NAME }}.tls": "true",
+             "traefik.http.routers.{{ PROJECT_NAME }}.tls.certresolver": "myresolver"
+          }'

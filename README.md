@@ -41,5 +41,5 @@ Update the basicauth and middleware labels in the web server config of the playb
 
 To remove the basic auth just remove the these two labels
 
-    "traefik.http.middlewares.{{ PROJECT_NAME }}-auth.basicauth.users": "web:$apr1$6Zpn5i48$2c1a/YEZYW1TJS.iuTpmP/",
+    "traefik.http.middlewares.{{ PROJECT_NAME }}-auth.basicauth.users": "{{ BASIC_AUTH_USER }}:{{ BASIC_AUTH_PASSWORD }}"
     "traefik.http.routers.{{ PROJECT_NAME }}.middlewares": "{{ PROJECT_NAME }}-auth"
